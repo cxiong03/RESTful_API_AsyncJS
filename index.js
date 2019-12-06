@@ -1,20 +1,18 @@
-// Asynchronous - difficult to read
 console.log('Before');
-getUser(1, (user) => {
-    getRepositories(user.gitHubUsername, (repos) => {
-        getCommits(repo, (commits) => {
-            // This is what we call CALLBACK HELL or Christmas tree problem
-    });
- });
-});
+getUser(1, getRepositories);
 console.log('After');
 
-// Synchronous - easier to read
-console.log('Before');
-const user = getUser(1);
-const repos = getRepositories(user.gitHubUsername);
-const commits = getCommits(repos[0]);
-console.log('After');
+function getRepositories(user) {
+    getRepositories(user.gitHubUsername, getCommits);
+}
+
+function getCommits(repos) {
+    getCommits(repo, displayCommits);
+}
+
+function displayCommits(commits) {
+    console.log(commits);
+}
 
 function getUser(id, callback) {
     setTimeout(() => {
@@ -26,6 +24,6 @@ function getUser(id, callback) {
 function getRepositories(username, callback) {
     setTimeout(() => {
         console.log('Calling GitHub API...');
-        callback(['Repo1', 'Repo2', 'Repo3']);
+        callback (['Repo1', 'Repo2', 'Repo3']);
     }, 2000);
 }
